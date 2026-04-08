@@ -1,0 +1,146 @@
+unc punct(s string) string {
+	word := strings.Fields(s)
+	for i := 0; i < len(word); i++ {
+		if strings.ContainsAny(word[i], ":;',.?!") {
+			if i > 0 {
+				word[i-1] += word[i]
+
+				word = append(word[:i], word[i+1:]...)
+				i--
+			}
+		}
+	}
+	return strings.Join(word, " ")
+}
+
+func upper(words []string) []string {
+	for i := 0; i < len(words); i++ {
+		if words[i] == "(up)" {
+			words[i-1] = strings.ToUpper(words[i-1])
+
+			words = append(words[:i], words[i+1:]...)
+			i--
+		}
+	}
+	return words
+}
+
+func covertTo(word []string) []string {
+	for i := 0; i < len(word); i++ {
+		switch word[i] {
+		case "(bin)":
+			if i > 0 {
+				val, err := strconv.ParseInt(word[i-1], 2, 64)
+				if err != nil {
+					continue
+				}
+				word[i-1] = strconv.FormatInt(val, 10)
+
+				word = append(word[:i], word[i+1:]...)
+				i--
+			}
+		case "(hex)":
+			if i > 0 {
+				val, err := strconv.ParseInt(word[i-1], 16, 64)
+				if err != nil {
+					continue
+				}
+				word[i-1] = strconv.FormatInt(val, 10)
+
+				word = append(word[:i], word[i+1:]...)
+				i--
+			}
+		}
+	}
+	return word
+}
+
+func UPmarker(word []string) []string {
+	for i := 0; i < len(word); i++ {
+		if word[i] == "(up)" {
+			if i > 0 {
+				word[i-1] = strings.ToUpper(word[i-1])
+			}
+			word = append(word[:i], word[i+1:]...)
+			i--
+		} else if word[i] == "(up" && i+1 < len(word) {
+			marker := strings.TrimRight(word[i+1], "),")
+			n, err := strconv.Atoi(marker)
+			if err != nil {
+				fmt.Println("invalid")
+			}
+
+			if n > len(word) {
+				continue
+			}
+			for j := 1; j <= n; j++ {
+				if i-j > 0 {
+					word[i-j] = strings.ToUpper(word[i-j])
+				}
+			}
+			word = append(word[:i], word[i+2:]...)
+			i--
+		}
+	}
+	return word
+}
+
+func LOWmarker(words []string) []string {
+	for i := 0; i < len(words); i++ {
+		if words[i] == "(low)" {
+			if i > 0 {
+				words[i-1] = strings.ToLower(words[i+1])
+			}
+			words = append(words[:i], words[i+1:]...)
+			i--
+		}else if words[i] == "(low" && i+1 < len(words) {
+			marker := strings.TrimRight(words[i+1], "),")
+			n, err := strconv.Atoi(marker)
+			if err != nil {
+				fmt.Println("invalid")
+			}
+
+			if n > len(words) {
+				continue
+			}
+			for j := 0; j <= n; j++ {
+				if i-j > 0 {
+					words[i-j] = strings.ToLower(words[i-j])
+				}
+			}
+			words = append(words[:i], words[i+2:]...)
+			i--
+		}
+	}
+	return words		
+}
+
+func CAPmarker(s []string) []string {
+	for i := 0; i < len(s); i++ {
+		if s[i] == "(cap)" {
+			if i > 0 {
+				s[i-1] = strings.Title(s[i-1])
+			}
+			s = append(s[:i], s[i+1:]...)
+			i--
+		} else if s[i] == "(cap" && i+1 < len(s) {
+			marker := strings.TrimRight(s[i+1], "),")
+			n, err := strconv.Atoi(marker)
+			if err != nil {
+				fmt.Println("invalid")
+			}
+
+			if n > len(s) {
+				continue
+			}
+			for j := 0; j <= n; j++ {
+				if i-j > 0 {
+					s[i-j] = strings.Title(s[i-j])
+				}
+			}
+			s = append(s[:i], s[i+2:]...)
+			i--
+		}
+	}
+	return s
+}
