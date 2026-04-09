@@ -144,3 +144,22 @@ func CAPmarker(s []string) []string {
 	}
 	return s
 }
+
+func fixAToAn(text string) string {
+	word := strings.Fields(text)
+	for i := 0; i < len(word); i++ {
+		if word[i] == "an" && !strings.ContainsAny(string(word[i+1][0]), "aeiouhAEIOUH") {
+			word[i] = "a"
+
+		}else if word[i] == "An" && !strings.ContainsAny(string(word[i+1][0]), "aeiouhAEIOUH") {
+			word[i] = "A"
+		}
+		if word[i] == "a" && strings.ContainsAny(string(word[i+1][0]), "aeiouhAEIOUH") {
+			word[i] = "an"
+
+		}else if word[i] == "A" && strings.ContainsAny(string(word[i+1][0]), "aeiouhAEIOUH") {
+			word[i] = "An"
+		}
+	}
+	return strings.Join(word, " ")
+}
