@@ -1,4 +1,4 @@
-unc punct(s string) string {
+func punct(s string) string {
 	word := strings.Fields(s)
 	for i := 0; i < len(word); i++ {
 		if strings.ContainsAny(word[i], ":;',.?!") {
