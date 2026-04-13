@@ -27,7 +27,7 @@ func upper(words []string) []string {
 
 func covertTo(word []string) []string {
 	for i := 0; i < len(word); i++ {
-		switch word[i] {
+		switch strings.ToLower(word[i]) {
 		case "(bin)":
 			if i > 0 {
 				val, err := strconv.ParseInt(word[i-1], 2, 64)
