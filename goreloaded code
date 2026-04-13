@@ -163,3 +163,75 @@ func fixAToAn(text string) string {
 	}
 	return strings.Join(word, " ")
 }
+
+func upper(word []string) []string {
+	for i := 0; i < len(word); i++ {
+		switch {
+		case strings.HasPrefix(word[i], "(up"):
+			count := 1
+			if strings.HasPrefix(word[i], "(up,") {
+				marker := strings.TrimPrefix(word[i], "(up, ")
+				marker = strings.TrimSuffix(marker, ")")
+				n, err := strconv.Atoi(marker)
+				if err == nil {
+					count = n
+				}
+			}
+			for j := 1; j <= count; j++ {
+				if i-j > 0 {
+					word[i-j] = strings.ToUpper(word[i-j])
+				}
+			}
+			word = append(word[:i], word[i+1:]...)
+			i--
+
+		case strings.HasPrefix(word[i], "(low"):
+			count := 1
+			if strings.HasPrefix(word[i], "(low,") {
+				marker := strings.TrimPrefix(word[i], "(low,")
+				marker = strings.TrimSuffix(marker, ")")
+				n, err := strconv.Atoi(marker)
+				if err == nil {
+					count = n
+				}
+			}
+			for j := 1; j <= count; j++ {
+				if i-j > 0 {
+					word[i-j] = strings.ToLower(word[i-j])
+				}
+			}
+			word = append(word[:i], word[i+1:]...)
+			i--
+
+		case strings.HasPrefix(word[i], "(cap"):
+			count := 1
+			if strings.HasPrefix(word[i], "(cap,") {
+				marker := strings.TrimPrefix(word[i], "(cap, ")
+				marker = strings.TrimSuffix(marker, ")")
+				n, err := strconv.Atoi(marker)
+				if err == nil {
+					count = n
+				}
+			}
+			for j := 1; j <= count; j++ {
+				if i-j > 0 {
+					word[i-j] = strings.ToUpper(word[i-j][:1]) + strings.ToLower(word[i-j][1:])
+				}
+			}
+			word = append(word[:i], word[i+1:]...)
+			i--
+		}
+	}
+	return word
+}
+
+
+
+func fixQuote(text string) string {
+	text = strings.ReplaceAll(text, " '", "'")
+	text = strings.ReplaceAll(text, "' ", "'")
+	text = strings.ReplaceAll(text, ":'", ": '")
+	return strings.TrimSpace(text)
+}
+
+
